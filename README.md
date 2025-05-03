@@ -16,16 +16,16 @@ The third python script checks every link from script two and checks if they con
 I decided to go with three scripts so that you dont have to go through all 3400 classes everytime you want to change the time search in the third script just in case its needed. Also if there were any crashes you would lose less progress.
 
 ## Instructions
-# PREFACE:
+### PREFACE:
 Make sure that you have replaced your drexel email and password in each of the scripts
-Example:
-username = "abc123@drexel.edu"
-password = "password456"
 
-1. Follow the comments in the first script and take the link of the term you're trying to search through, should look something like this: https://termmasterschedule.drexel.edu/webtms_du/collegesSubjects/202425?collCode= paste it into the "" of line 31
+Example: username = "abc123@drexel.edu"  ||  password = "password456"
 
-2. Run the second script and type in the EXACT building name and room number. (this is the one that takes 45mins)
 
-3. Give the two times for the range you're to see if the room is being used. At the end of the script all of the time conflict links will be opened and you can go through them to check the days. Note there is a quirk where if the final exam takes place in that room during that range it will pick it up, so go through the links afterwards to make sure there aren't false positives.
+1. Follow the comments in EveryCourseGrabber and take the link of the term you're trying to search through, should look something like this: https://termmasterschedule.drexel.edu/webtms_du/collegesSubjects/202425?collCode= | paste it into the "" of driver.get() on line 35
+
+2. Run RoomFinder and type in the EXACT building name and room number from the Drexel term master schedule website. (this is the one that takes 45mins so be careful)
+
+3. Run TimeChecker and give the two times for the range you're to see if the room is being used. At the end of the script all of the time conflict links will be opened and you can go through them to check the days. Note there is a quirk where if the final exam takes place in that room during that range it will pick it up, so go through the links afterwards to make sure there aren't false positives.
 
 Alternatively running the script early in the term before there are final exam dates would fix this as well.
