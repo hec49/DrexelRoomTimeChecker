@@ -17,12 +17,12 @@ I decided to go with three scripts so that you dont have to go through all 3400 
 
 ## Instructions
 ### PREFACE:
-Make sure that you have replaced your drexel email and password in each of the scripts
+Make sure that you open **EVERY** script and set username and password to your drexel email and password
 
 Example: username = "abc123@drexel.edu"  ||  password = "password456"
 
 
-1. Follow the comments in EveryCourseGrabber and take the link of the term you're trying to search through, should look something like this: https://termmasterschedule.drexel.edu/webtms_du/collegesSubjects/202425?collCode= | paste it into the "" of driver.get() on line 35
+1. Start by opening EveryCourseGrabber.py, follow the comments and take the link of the term you're trying to search through from the Drexel Master Schedule (for example if I wanted spring I would open the term master schedule go to spring term and copy that link) it should look something like this: https://termmasterschedule.drexel.edu/webtms_du/collegesSubjects/202425?collCode= | paste it into the "" of driver.get() on line 35. Then run EveryCOurseGrabber.py
 
 2. Run RoomFinder and type in the EXACT building name and room number from the Drexel term master schedule website. (this is the one that takes 45mins so be careful)
 
