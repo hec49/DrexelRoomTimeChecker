@@ -105,6 +105,7 @@ for index, (course_detail_link, collCode_link, course_list_link) in enumerate(co
 
     except Exception as e:
         print(f"{index}/{total_links}: Error processing {course_detail_link}: {e}")
+        collected_course_details_info.add(f"{course_detail_link} | {collCode_link} | {course_list_link}")
 
     time.sleep(0.1)
 
@@ -117,4 +118,5 @@ with open(output_file, "w") as file:
         file.write(info + "\n")
 
 print(f"Processing complete! Saved course details information to {output_file}")
+
 driver.quit()
