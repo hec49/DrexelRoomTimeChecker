@@ -28,7 +28,7 @@ Insert yout Drexel email/password into the plain text file named `credentials.tx
 ```
 your_email@drexel.edu
 your_password
-https://termmasterschedule.drexel.edu/webtms_du/collegesSubjects/202535?collCode=
+https://termmasterschedule.drexel.edu/webtms_du/collegesSubjects/YOUR_TERM_HERE
 ```
 (email on line 1, password on line 2, term master schedule link on line 3 — nothing else in the file)
 
