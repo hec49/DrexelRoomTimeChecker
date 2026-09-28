@@ -7,15 +7,29 @@ from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime, timedelta
 import time
 
-# Hardcoded login credentials
-#
-#
-#
-# SET THESE TO YOUR DREXEL EMAIL AND PASSWORD FOR LOGGING IN
-username = ""
-password = ""
-#
-#
+#######################################################################################
+
+# Reading login credentials from credentials.txt (see README for format)
+# Create a file named credentials.txt in this same folder:
+#   line 1 = your Drexel email
+#   line 2 = your Drexel password
+#   line 3 = the term master schedule link (used by EveryCourseGrabber.py)
+
+script_directory = os.path.dirname(os.path.abspath(__file__))
+credentials_file = os.path.join(script_directory, "credentials.txt")
+
+if not os.path.exists(credentials_file):
+    print(f"Error: {credentials_file} not found. Create it with your email on line 1, password on line 2, and the term link on line 3.")
+    exit(1)
+
+with open(credentials_file, "r") as file:
+    cred_lines = [line.strip() for line in file.readlines()]
+
+if len(cred_lines) < 3 or not cred_lines[0] or not cred_lines[1] or not cred_lines[2]:
+    print(f"Error: {credentials_file} must have your email on line 1, password on line 2, and the term link on line 3.")
+    exit(1)
+
+username, password = cred_lines[0], cred_lines[1]
 #######################################################################################
 
 # Function to generate times in the specified range
@@ -53,7 +67,6 @@ print(f"Generated times to check: {times_to_check}")
 
 # Opening correct file
 
-script_directory = os.path.dirname(os.path.abspath(__file__))
 input_file = os.path.join(script_directory, "room_finder.txt")
 output_file = os.path.join(script_directory, "time_conflict_classes.txt")
 
@@ -96,21 +109,21 @@ print("Sign-in successful! Starting course detail scanning.")
 
 filtered_courses = set()
 
-# Time Checker Locgic
+# Time Checker Logic
 for index, (course_detail_link, collCode_link, course_list_link) in enumerate(course_detail_data, start=1):
     try:
         print(f"Processing {index}/{total_links}: Opening course list page...")
-        driver.get(course_list_link)  
+        driver.get(course_list_link)
         wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
         time.sleep(.1)
 
         print(f"Processing {index}/{total_links}: Opening collCode page...")
-        driver.get(collCode_link)  
+        driver.get(collCode_link)
         wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
         time.sleep(.1)
 
         print(f"Processing {index}/{total_links}: Opening course detail page...")
-        driver.get(course_detail_link)  
+        driver.get(course_detail_link)
         wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
 
         page_source = driver.page_source
@@ -119,7 +132,7 @@ for index, (course_detail_link, collCode_link, course_list_link) in enumerate(co
             page_lines = page_source.splitlines()
             time_found = False
 
-            for line in page_lines: # Fixes bug where if the time was in the Last Updated section, it would be added to the list
+            for line in page_lines:  # Fixes bug where if the time was in the Last Updated section, it would be added to the list
                 if time_string in line:
                     if 'Last Updated' in line:
                         continue
@@ -134,7 +147,7 @@ for index, (course_detail_link, collCode_link, course_list_link) in enumerate(co
 
     except Exception as e:
         print(f"{index}/{total_links}: Error processing {course_detail_link}: {e}")
-    
+
     time.sleep(0.1)
 
 #######################################################################################

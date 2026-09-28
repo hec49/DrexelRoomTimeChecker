@@ -7,20 +7,33 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-# Hardcoded login credentials
-#
-#
-#
-# SET THESE TO YOUR DREXEL EMAIL AND PASSWORD FOR LOGGING IN
-username = ""
-password = ""
-#
-#
+#######################################################################################
+
+# Reading login credentials + term link from credentials.txt (see README for format)
+# Create a file named credentials.txt in this same folder:
+#   line 1 = your Drexel email
+#   line 2 = your Drexel password
+#   line 3 = the term master schedule link you're searching through
+
+script_directory = os.path.dirname(os.path.abspath(__file__))
+credentials_file = os.path.join(script_directory, "credentials.txt")
+
+if not os.path.exists(credentials_file):
+    print(f"Error: {credentials_file} not found. Create it with your email on line 1, password on line 2, and the term link on line 3.")
+    exit(1)
+
+with open(credentials_file, "r") as file:
+    lines = [line.strip() for line in file.readlines()]
+
+if len(lines) < 3 or not lines[0] or not lines[1] or not lines[2]:
+    print(f"Error: {credentials_file} must have your email on line 1, password on line 2, and the term link on line 3.")
+    exit(1)
+
+username, password, term_link = lines[0], lines[1], lines[2]
 #######################################################################################
 
 # Opening correct file
 
-script_directory = os.path.dirname(os.path.abspath(__file__))
 output_course_details = os.path.join(script_directory, "every_class_in_term.txt")
 
 #######################################################################################
@@ -30,9 +43,8 @@ chrome_options = Options()
 chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
 driver = webdriver.Chrome(options=chrome_options)
 
-# CHANGE THIS LINK TO THE QUARTER YOURE LOOKING THROUGH  VVVVVVVVVVVVVVVVV
-# PLEASE EDIT THE TEXT IN THE QUOTES
-driver.get("")
+# The term master schedule link now comes from line 3 of credentials.txt
+driver.get(term_link)
 wait = WebDriverWait(driver, 15)
 
 
@@ -71,6 +83,7 @@ for collCode_link in collCode_links:
         href = course_link.get_attribute("href")
         if href:
             collected_links.append(f"{collCode_link}|{href}")
+time.sleep(0.5)
 
 #######################################################################################
 
@@ -96,7 +109,7 @@ for line in collected_links:
     driver.get(course_list_link)
     wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
     course_detail_links = driver.find_elements(By.CSS_SELECTOR, "a[href*='/webtms_du/courseDetails/']")
-    
+
     for detail_link in course_detail_links:
         href = detail_link.get_attribute("href")
         if href:

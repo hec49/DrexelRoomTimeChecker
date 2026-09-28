@@ -7,26 +7,38 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 
-# Hardcoded login credentials
-#
-#
-#
-# SET THESE TO YOUR DREXEL EMAIL AND PASSWORD FOR LOGGING IN
-username = ""
-password = ""
-#
-#
+#######################################################################################
+
+# Reading login credentials from credentials.txt (see README for format)
+# Create a file named credentials.txt in this same folder:
+#   line 1 = your Drexel email
+#   line 2 = your Drexel password
+#   line 3 = the term master schedule link (used by EveryCourseGrabber.py)
+
+script_directory = os.path.dirname(os.path.abspath(__file__))
+credentials_file = os.path.join(script_directory, "credentials.txt")
+
+if not os.path.exists(credentials_file):
+    print(f"Error: {credentials_file} not found. Create it with your email on line 1, password on line 2, and the term link on line 3.")
+    exit(1)
+
+with open(credentials_file, "r") as file:
+    lines = [line.strip() for line in file.readlines()]
+
+if len(lines) < 3 or not lines[0] or not lines[1] or not lines[2]:
+    print(f"Error: {credentials_file} must have your email on line 1, password on line 2, and the term link on line 3.")
+    exit(1)
+
+username, password = lines[0], lines[1]
 #######################################################################################
 
 # Ask the user for the building and room number
-building = input("Enter the building name you are looking for: \nCHECK MASTER TERM SCHEDULE FOR EXACT SPELLING IF YOU ARE UNSURE\n").strip()
+building = input("Enter the building name you are looking for: \nCHECK MASTER TERM SCHEDULE FOR EXACT SPELLING IF YOU ARE UNSURE\n(if FSAE room building is 3101 Market Street)\n").strip()
 room_number = input("Enter the room number you are looking for: ").strip()
-
 #######################################################################################
 
 # Opening correct file
 
-script_directory = os.path.dirname(os.path.abspath(__file__))
 input_file = os.path.join(script_directory, "every_class_in_term.txt")
 output_file = os.path.join(script_directory, "room_finder.txt")
 
@@ -102,10 +114,10 @@ for index, (course_detail_link, collCode_link, course_list_link) in enumerate(co
 
         if building in page_source and room_number in page_source:
             print(f"{index}/{total_links}: Collected course info")
+            collected_course_details_info.add(f"{course_detail_link} | {collCode_link} | {course_list_link}")
 
     except Exception as e:
         print(f"{index}/{total_links}: Error processing {course_detail_link}: {e}")
-        collected_course_details_info.add(f"{course_detail_link} | {collCode_link} | {course_list_link}")
 
     time.sleep(0.1)
 
@@ -118,5 +130,4 @@ with open(output_file, "w") as file:
         file.write(info + "\n")
 
 print(f"Processing complete! Saved course details information to {output_file}")
-
 driver.quit()
